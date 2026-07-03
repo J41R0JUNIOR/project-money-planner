@@ -1,47 +1,47 @@
 package config
 
 import (
+	"context"
 	"fmt"
 
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/service/dynamodb"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 )
 
-func CreateTable(tableName string) error {
-	if tableName == "" {
-		tableName = "project-money-planner"
-	}
+func CreateTable() error {
+	tableName := "project-money-planner"
 
 	if DynamoDBClient == nil {
-		NewDynamoDBClient()
+		NewDynamoDBClient(context.Background())
 	}
 
 	input := &dynamodb.CreateTableInput{
-		AttributeDefinitions: []*dynamodb.AttributeDefinition{
+		AttributeDefinitions: []types.AttributeDefinition{
 			{
 				AttributeName: aws.String("PK"),
-				AttributeType: aws.String("S"),
+				AttributeType: types.ScalarAttributeTypeS,
 			},
 			{
 				AttributeName: aws.String("SK"),
-				AttributeType: aws.String("S"),
+				AttributeType: types.ScalarAttributeTypeS,
 			},
 		},
-		KeySchema: []*dynamodb.KeySchemaElement{
+		KeySchema: []types.KeySchemaElement{
 			{
 				AttributeName: aws.String("PK"),
-				KeyType:       aws.String("HASH"),
+				KeyType:       types.KeyTypeHash,
 			},
 			{
 				AttributeName: aws.String("SK"),
-				KeyType:       aws.String("RANGE"),
+				KeyType:       types.KeyTypeRange,
 			},
 		},
-		BillingMode: aws.String(dynamodb.BillingModePayPerRequest),
+		BillingMode: types.BillingModePayPerRequest,
 		TableName:   aws.String(tableName),
 	}
 
-	_, err := DynamoDBClient.CreateTable(input)
+	_, err := DynamoDBClient.CreateTable(context.Background(), input)
 	if err != nil {
 		return err
 	}

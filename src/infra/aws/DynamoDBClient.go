@@ -1,21 +1,20 @@
 package config
 
 import (
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/dynamodb"
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 )
 
-var DynamoDBClient *dynamodb.DynamoDB
+var DynamoDBClient *dynamodb.Client
 
-func NewDynamoDBClient() *dynamodb.DynamoDB {
-	// Initialize a session that the SDK will use to load
-	// credentials from the shared credentials file ~/.aws/credentials
-	// and region from the shared configuration file ~/.aws/config.
-	sess := session.Must(session.NewSessionWithOptions(session.Options{
-		SharedConfigState: session.SharedConfigEnable,
-	}))
+func NewDynamoDBClient(ctx context.Context) *dynamodb.Client {
+	cfg, err := config.LoadDefaultConfig(ctx)
+	if err != nil {
+		panic(err)
+	}
 
-	// Create DynamoDB client
-	DynamoDBClient = dynamodb.New(sess)
+	DynamoDBClient = dynamodb.NewFromConfig(cfg)
 	return DynamoDBClient
 }

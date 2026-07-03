@@ -5,7 +5,7 @@ import (
 	"time"
 
 	base "github.com/J41R0JUNIOR/project-money-planner/src/domain"
-	model "github.com/J41R0JUNIOR/project-money-planner/src/domain/dynamodb"
+	model "github.com/J41R0JUNIOR/project-money-planner/src/domain/dynamodb_domain"
 )
 
 func BuildPK(userID int) string {
