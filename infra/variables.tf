@@ -9,16 +9,6 @@ variable "aws_region" {
   }
 }
 
-variable "access_key" {
-    type        = string
-    description = "AWS Access Key"
-}
-
-variable "secret_key" {
-    type        = string
-    description = "AWS Secret Key"
-}
-
 variable "app_name" {
   type        = string
   description = "The name of the application"
