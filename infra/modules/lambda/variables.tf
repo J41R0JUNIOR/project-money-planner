@@ -18,9 +18,9 @@ variable "role_arn" {
   description = "IAM role ARN for the Lambda execution role"
 }
 
-variable "source_file_path" {
+variable "zip_path" {
   type        = string
-  description = "Path to the Lambda source file"
+  description = "Path to the Lambda zip file"
 }
 
 variable "env_vars" {
