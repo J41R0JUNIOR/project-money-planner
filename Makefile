@@ -11,12 +11,7 @@ build-user:
 	GOOS=$(GOOS) GOARCH=$(GOARCH) go build -o dist/user/bootstrap ./cmd/user
 	cd dist/user && zip -FS function.zip bootstrap
 
-build-transaction:
-	mkdir -p dist/transaction
-	GOOS=$(GOOS) GOARCH=$(GOARCH) go build -o dist/transaction/bootstrap ./cmd/transaction
-	cd dist/transaction && zip -FS function.zip bootstrap
-
-build: build-auth build-user build-transaction
+build: build-auth build-user
 
 clean:
 	rm -rf dist
