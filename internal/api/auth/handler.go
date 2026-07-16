@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	auth_dto "money-manager/internal/api/auth/dto"
+	"money-manager/internal/api/auth/dto"
 	"money-manager/internal/service"
 
 	"github.com/aws/aws-lambda-go/events"
@@ -46,6 +46,35 @@ func (h *Handler) Handle(
 	}
 }
 
+func (h *Handler) SignUp(
+	ctx context.Context,
+	event events.APIGatewayV2HTTPRequest,
+) (events.APIGatewayV2HTTPResponse, error) {
+
+	requestDTO := auth_dto.SignUpRequestDTO{}
+
+	if err := json.Unmarshal([]byte(event.Body), &requestDTO); err != nil {
+		return events.APIGatewayV2HTTPResponse{
+			StatusCode: http.StatusBadRequest,
+			Body:       `{"message":"Invalid request body"}`,
+		}, nil
+	}
+
+	err := h.authService.SignUp(ctx, requestDTO)
+
+	if err != nil {
+		return events.APIGatewayV2HTTPResponse{
+			StatusCode: http.StatusInternalServerError,
+			Body:       err.Error(),
+		}, nil
+	}
+
+	return events.APIGatewayV2HTTPResponse{
+		StatusCode: http.StatusCreated,
+		Body:       `{"message":"SignUp successful"}`,
+	}, nil
+}
+
 func (h *Handler) SignIn(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.APIGatewayV2HTTPResponse, error) {
 
 	var requestDTO auth_dto.SignInRequestDTO
@@ -73,34 +102,5 @@ func (h *Handler) SignIn(ctx context.Context, event events.APIGatewayV2HTTPReque
 	return events.APIGatewayV2HTTPResponse{
 		StatusCode: http.StatusOK,
 		Body:       string(responseBody),
-	}, nil
-}
-
-func (h *Handler) SignUp(
-	ctx context.Context,
-	event events.APIGatewayV2HTTPRequest,
-) (events.APIGatewayV2HTTPResponse, error) {
-
-	requestDTO := auth_dto.SignUpRequestDTO{}
-
-	if err := json.Unmarshal([]byte(event.Body), &requestDTO); err != nil {
-		return events.APIGatewayV2HTTPResponse{
-			StatusCode: http.StatusBadRequest,
-			Body:       `{"message":"Invalid request body"}`,
-		}, nil
-	}
-
-	err := h.authService.SignUp(ctx, requestDTO)
-
-	if err != nil {
-		return events.APIGatewayV2HTTPResponse{
-			StatusCode: http.StatusInternalServerError,
-			Body:       err.Error(),
-		}, nil
-	}
-
-	return events.APIGatewayV2HTTPResponse{
-		StatusCode: http.StatusCreated,
-		Body:       `{"message":"SignUp successful"}`,
 	}, nil
 }
