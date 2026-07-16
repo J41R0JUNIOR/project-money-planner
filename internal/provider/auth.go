@@ -1,8 +1,11 @@
 package provider
 
-import "money-manager/internal/domain"
+import (
+	"context"
+	domain "money-manager/internal/domain/auth"
+)
 
 type AuthProvider interface {
-	SignUp(userName string, password string, userEmail string) (bool, error)
-	SignIn(email string, password string) (domain.Auth, error)
+	SignUp(ctx context.Context, userName string, password string, userEmail string) (string, error)
+	SignIn(ctx context.Context, email string, password string) (domain.Auth, error)
 }

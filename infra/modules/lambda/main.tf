@@ -15,9 +15,12 @@ resource "aws_lambda_function" "this" {
   runtime          = "provided.al2023"
 
   environment {
-    variables = {
+    variables = merge(
+      {
         APP_NAME    = var.app_name
         ENVIRONMENT = var.environment
-    }
+      },
+      var.env_vars
+    )
   }
 }

@@ -5,7 +5,7 @@ import (
 	"errors"
 	"log"
 
-	"money-manager/internal/domain"
+	domain "money-manager/internal/domain/auth"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/cognitoidentityprovider"
@@ -14,19 +14,18 @@ import (
 
 type CognitoActions struct {
 	CognitoClient *cognitoidentityprovider.Client
-	ctx           context.Context
 	clientId      string
 }
 
-func NewCognitoActions(cognitoClient *cognitoidentityprovider.Client) *CognitoActions {
+func NewCognitoActions(cognitoClient *cognitoidentityprovider.Client, clientId string) *CognitoActions {
 	return &CognitoActions{
 		CognitoClient: cognitoClient,
+		clientId:      clientId,
 	}
 }
 
-func (actor CognitoActions) SignUp(userName string, password string, userEmail string) (bool, error) {
-	confirmed := false
-	output, err := actor.CognitoClient.SignUp(actor.ctx, &cognitoidentityprovider.SignUpInput{
+func (actor CognitoActions) SignUp(ctx context.Context, userName string, password string, userEmail string) (string, error) {
+	result, err := actor.CognitoClient.SignUp(ctx, &cognitoidentityprovider.SignUpInput{
 		ClientId: aws.String(actor.clientId),
 		Password: aws.String(password),
 		Username: aws.String(userName),
@@ -38,20 +37,19 @@ func (actor CognitoActions) SignUp(userName string, password string, userEmail s
 	if err != nil {
 		if perr, ok := errors.AsType[*types.InvalidPasswordException](err); ok {
 			log.Println(perr.Message)
+			
 		} else {
 			log.Printf("Couldn't sign up user %v. Here's why: %v\n", userName, err)
 		}
 		
-	} else {
-		confirmed = output.UserConfirmed
-	}
+	} 
 
-	return confirmed, err
+	return *result.UserSub, err
 }
 
-func (actor CognitoActions) SignIn(userName string, password string) (domain.Auth, error) {
+func (actor CognitoActions) SignIn(ctx context.Context, userName string, password string) (domain.Auth, error) {
 	var authResult *types.AuthenticationResultType
-	output, err := actor.CognitoClient.InitiateAuth(actor.ctx, &cognitoidentityprovider.InitiateAuthInput{
+	output, err := actor.CognitoClient.InitiateAuth(ctx, &cognitoidentityprovider.InitiateAuthInput{
 		AuthFlow:       "USER_PASSWORD_AUTH",
 		ClientId:       aws.String(actor.clientId),
 		AuthParameters: map[string]string{"USERNAME": userName, "PASSWORD": password},

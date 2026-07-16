@@ -2,32 +2,54 @@ package main
 
 import (
 	"context"
+	"os"
 
-	"money-manager/internal/api/auth"
-	"money-manager/internal/service"
-	"money-manager/internal/infra/dynamodb"
-	"money-manager/internal/infra/cognito"
+	usecase "money-manager/internal/application/auth"
+	delivery "money-manager/internal/delivery/auth"
+	provider "money-manager/internal/infra/cognito"
+	db "money-manager/internal/infra/dynamodb"
 
 	"github.com/aws/aws-lambda-go/lambda"
-	"github.com/aws/aws-sdk-go-v2/service/cognitoidentityprovider"
 	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/service/cognitoidentityprovider"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 )
 
 func main() {
-	awsConfig, err := config.LoadDefaultConfig(context.Background())
+
+	cfg, err := config.LoadDefaultConfig(context.Background())
 	if err != nil {
 		panic(err)
 	}
 
-	cognitoClient := cognitoidentityprovider.NewFromConfig(awsConfig)
+	clientID := os.Getenv("COGNITO_CLIENT_ID")
+    if clientID == "" {
+        panic("COGNITO_CLIENT_ID is not set")
+    }
 
-	authProvider := cognito.NewCognitoActions(cognitoClient)
+	cognitoClient := cognitoidentityprovider.NewFromConfig(cfg)
+	dynamoClient := dynamodb.NewFromConfig(cfg)
 
-	userRepository := dynamodb.NewUserRepository()
+	authProvider := provider.NewCognitoActions(cognitoClient, clientID)
 
-	service := service.NewAuthService(authProvider, userRepository)
+	userRepository := db.NewUserRepository(dynamoClient)
 
-	handler := auth.NewHandler(service)
+	signUpUseCase := usecase.NewSignUpUseCase(
+		authProvider,
+		userRepository,
+	)
 
-	lambda.Start(handler.Handle)
+	signInUseCase := usecase.NewSignInUseCase(
+		authProvider,
+	)
+
+	handler := delivery.NewHandler(
+		signUpUseCase,
+		signInUseCase,
+	)
+
+	router := delivery.NewRouter(handler)
+
+	// Lambda
+	lambda.Start(router.Handle)
 }

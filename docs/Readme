@@ -1,0 +1,150 @@
+# Money Planner
+
+## Visão Geral
+
+O **Money Planner** é uma plataforma de planejamento financeiro pessoal desenvolvida com foco em projeção, simulação e tomada de decisão. Diferente de aplicativos tradicionais de controle financeiro, o objetivo principal não é apenas registrar receitas e despesas, mas permitir que o usuário compreenda o impacto das suas decisões financeiras no futuro.
+
+A aplicação utiliza um modelo baseado em **eventos financeiros planejados**, **transações realizadas** e **cenários simulados** para construir projeções de saldo ao longo do tempo, auxiliando no planejamento de curto, médio e longo prazo.
+
+---
+
+## Objetivo
+
+O projeto busca responder perguntas como:
+
+* Quanto dinheiro terei em julho do próximo ano?
+* O que acontece se eu cancelar algumas assinaturas?
+* Quanto consigo economizar se aumentar meu aporte mensal?
+* Posso comprar um carro sem comprometer minha reserva financeira?
+* Qual será meu saldo após todas as despesas previstas?
+* Quando atingirei minha meta financeira?
+
+Em vez de apenas apresentar um histórico financeiro, o sistema atua como uma ferramenta de planejamento, permitindo ao usuário visualizar antecipadamente o impacto de suas decisões.
+
+---
+
+## Conceitos do Domínio
+
+### Planner
+
+O Planner representa tudo aquilo que está previsto para acontecer.
+
+São eventos financeiros planejados, como:
+
+* salários;
+* assinaturas;
+* contas recorrentes;
+* compras futuras;
+* parcelas;
+* impostos;
+* investimentos programados;
+* qualquer receita ou despesa com data prevista.
+
+Esses eventos ainda não ocorreram, mas fazem parte do planejamento financeiro do usuário.
+
+---
+
+### Ledger
+
+O Ledger representa a realidade financeira.
+
+Após um evento acontecer, ele passa a fazer parte do histórico de transações da aplicação.
+
+O Ledger registra:
+
+* receitas recebidas;
+* despesas pagas;
+* transferências;
+* investimentos executados;
+* movimentações financeiras reais.
+
+Enquanto o Planner trabalha com previsões, o Ledger representa os fatos.
+
+---
+
+### Forecast
+
+O Forecast é o motor de projeções do sistema.
+
+Ele combina informações provenientes do Planner, do Ledger, das metas financeiras e dos cenários criados pelo usuário para calcular projeções futuras.
+
+Entre suas responsabilidades estão:
+
+* projeção de saldo;
+* evolução patrimonial;
+* fluxo de caixa futuro;
+* simulações financeiras;
+* comparação entre cenários;
+* geração de linhas do tempo financeiras.
+
+O Forecast não armazena dados; sua função é processar informações e gerar previsões.
+
+---
+
+### Goals
+
+As Goals representam objetivos financeiros.
+
+Exemplos:
+
+* reserva de emergência;
+* compra de imóvel;
+* troca de veículo;
+* viagem;
+* aposentadoria;
+* patrimônio desejado.
+
+Essas metas podem ser utilizadas pelo Forecast para calcular previsões e acompanhar a evolução do planejamento.
+
+---
+
+### Scenarios
+
+Os Scenarios permitem criar simulações independentes da realidade atual.
+
+Cada cenário pode alterar eventos financeiros existentes ou adicionar novos elementos para avaliar diferentes possibilidades.
+
+Exemplos:
+
+* aumento salarial;
+* cancelamento de assinaturas;
+* compra de um imóvel;
+* mudança de emprego;
+* novo investimento mensal.
+
+O usuário pode comparar múltiplos cenários antes de tomar uma decisão.
+
+---
+
+## Arquitetura
+
+O projeto foi estruturado utilizando princípios de Clean Architecture e Domain-Driven Design (DDD), separando claramente responsabilidades entre domínio, casos de uso, entrega da API e infraestrutura.
+
+A arquitetura é composta por:
+
+* **Domain:** entidades, regras de negócio e objetos de valor.
+* **Application:** casos de uso responsáveis por orquestrar o domínio.
+* **Delivery:** camada responsável pela comunicação HTTP/Lambda e transformação de DTOs.
+* **Infrastructure:** implementações de serviços externos, como AWS Cognito e DynamoDB.
+* **Repository / Provider:** interfaces utilizadas para desacoplar a aplicação da infraestrutura.
+
+---
+
+## Tecnologias
+
+* Go
+* AWS Lambda
+* Amazon API Gateway
+* Amazon Cognito
+* Amazon DynamoDB
+* Terraform
+* Clean Architecture
+* Domain-Driven Design (DDD)
+
+---
+
+## Visão de Longo Prazo
+
+O objetivo do Money Planner é evoluir para uma plataforma completa de planejamento financeiro, capaz de analisar o comportamento financeiro do usuário e fornecer projeções confiáveis para apoiar decisões futuras.
+
+A ideia central é transformar dados financeiros em informações estratégicas, permitindo que o usuário não apenas acompanhe o passado, mas compreenda, simule e planeje seu futuro financeiro com maior previsibilidade.

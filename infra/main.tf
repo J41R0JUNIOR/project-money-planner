@@ -5,17 +5,16 @@ locals {
     auth = {
       function_name = "${local.app_name}-${var.environment}-auth"
       zip_path      = abspath("${path.root}/../dist/auth/function.zip")
+      env_vars = {
+        COGNITO_USER_POOL_ID = module.cognito.user_pool_id
+        COGNITO_CLIENT_ID    = module.cognito.user_pool_client_id
+      }
     }
 
-    user = {
-      function_name = "${local.app_name}-${var.environment}-user"
-      zip_path      = abspath("${path.root}/../dist/user/function.zip")
+    account = {
+      function_name = "${local.app_name}-${var.environment}-account"
+      zip_path      = abspath("${path.root}/../dist/account/function.zip")
     }
-
-    # transaction = {
-    #   function_name = "${local.app_name}-${var.environment}-transaction"
-    #   zip_path      = abspath("${path.root}/../dist/transaction/function.zip")
-    # }
   }
 }
 
@@ -31,6 +30,10 @@ module "iam" {
   environment = var.environment
 }
 
+module "dynamodb" {
+  source      = "./modules/dynamodb"
+}
+
 module "lambda" {
   for_each = local.lambdas
 
@@ -41,6 +44,5 @@ module "lambda" {
   role_arn      = module.iam.lambda_role_arn
   zip_path      = each.value.zip_path
 
-  # Descomente quando adicionar variáveis de ambiente específicas
-  # env_vars = lookup(each.value, "env_vars", {})
+  env_vars = lookup(each.value, "env_vars", {})
 }
