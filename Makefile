@@ -6,12 +6,7 @@ build-auth:
 	GOOS=$(GOOS) GOARCH=$(GOARCH) go build -o dist/auth/bootstrap ./cmd/auth
 	cd dist/auth && zip -FS function.zip bootstrap
 
-build-user:
-	mkdir -p dist/user
-	GOOS=$(GOOS) GOARCH=$(GOARCH) go build -o dist/user/bootstrap ./cmd/user
-	cd dist/user && zip -FS function.zip bootstrap
-
-build: build-auth build-user
+build: build-auth
 
 clean:
 	rm -rf dist

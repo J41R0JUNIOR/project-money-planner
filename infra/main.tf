@@ -10,11 +10,6 @@ locals {
         COGNITO_CLIENT_ID    = module.cognito.user_pool_client_id
       }
     }
-
-    account = {
-      function_name = "${local.app_name}-${var.environment}-account"
-      zip_path      = abspath("${path.root}/../dist/account/function.zip")
-    }
   }
 }
 
