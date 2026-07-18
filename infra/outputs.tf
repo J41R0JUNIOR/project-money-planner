@@ -7,7 +7,10 @@ output "cognito_user_pool_client_id" {
 }
 
 output "lambda_function_arns" {
-  value = { for name, lambda in module.lambda : name => lambda.lambda_function_arn }
+  value = {
+    for name, lambda in module.lambda :
+    name => lambda.function_arn
+  }
 }
 
 output "lambda_role_arn" {
