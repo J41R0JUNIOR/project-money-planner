@@ -5,8 +5,8 @@ type SignInRequestDTO struct {
 	Password string `json:"password"`
 }
 
-type SignInResponseDTO struct {
-    AccessToken  string `json:"accessToken"`
-    IdToken      string `json:"idToken"`
-    RefreshToken string `json:"refreshToken"`
-}
+// type SignInResponseDTO struct {
+//     AccessToken  string `json:"accessToken"`
+//     IdToken      string `json:"idToken"`
+//     RefreshToken string `json:"refreshToken"`
+// }

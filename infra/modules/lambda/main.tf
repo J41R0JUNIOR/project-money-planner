@@ -24,3 +24,20 @@ resource "aws_lambda_function" "this" {
     )
   }
 }
+
+resource "aws_lambda_function_url" "this" {
+  function_name = aws_lambda_function.this.function_name
+
+  authorization_type = var.public ? "NONE" : "AWS_IAM"
+}
+
+resource "aws_lambda_permission" "function_url" {
+  count = var.public ? 1 : 0
+
+  statement_id  = "AllowPublicFunctionUrl"
+  action        = "lambda:InvokeFunctionUrl"
+  function_name = aws_lambda_function.this.function_name
+  principal     = "*"
+
+  function_url_auth_type = "NONE"
+}

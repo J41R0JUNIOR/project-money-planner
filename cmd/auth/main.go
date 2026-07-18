@@ -48,9 +48,14 @@ func main() {
 		authProvider,
 	)
 
+	refreshUseCase := usecase.NewRefreshUseCase(
+		authProvider,
+	)
+
 	handler := delivery.NewHandler(
 		signUpUseCase,
 		signInUseCase,
+		refreshUseCase,
 	)
 
 	router := delivery.NewRouter(handler)

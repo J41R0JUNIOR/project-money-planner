@@ -13,18 +13,21 @@ type Handler struct {
 
 	signUpUseCase *usecase.SignUpUseCase
 	signInUseCase *usecase.SignInUseCase
+	refreshUseCase *usecase.RefreshUseCase
 
 }
 
 func NewHandler(
 	signUp *usecase.SignUpUseCase,
 	signIn *usecase.SignInUseCase,
+	refresh *usecase.RefreshUseCase,
 
 ) *Handler {
 
 	return &Handler{
 		signUpUseCase: signUp,
 		signInUseCase: signIn,
+		refreshUseCase: refresh,
 	}
 }
 
@@ -80,6 +83,35 @@ func (h *Handler) SignIn(
 		}, nil
 	}
 		
+	responseBody, _ := json.Marshal(response)
+
+	return events.APIGatewayV2HTTPResponse{
+		StatusCode: 200,
+		Body: string(responseBody),
+	}, nil
+}
+
+func (h *Handler) RefreshToken(
+	ctx context.Context,
+	event events.APIGatewayV2HTTPRequest,
+) (events.APIGatewayV2HTTPResponse, error) {
+	var requestDTO dto.RefreshRequestDTO
+	if err := json.Unmarshal([]byte(event.Body), &requestDTO); err != nil {
+		return events.APIGatewayV2HTTPResponse{
+			StatusCode: 400,
+			Body:       `{"message":"Invalid request body"}`,
+		}, err
+	}
+
+	response, err := h.refreshUseCase.Execute(ctx, requestDTO.RefreshToken)
+
+	if err != nil {
+		return events.APIGatewayV2HTTPResponse{
+			StatusCode: 500,
+			Body:       `{"message":"` + err.Error() + `"}`,
+		}, nil
+	}
+
 	responseBody, _ := json.Marshal(response)
 
 	return events.APIGatewayV2HTTPResponse{

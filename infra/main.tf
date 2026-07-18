@@ -5,6 +5,7 @@ locals {
     auth = {
       function_name = "${local.app_name}-${var.environment}-auth"
       zip_path      = abspath("${path.root}/../dist/auth/function.zip")
+      public        = true
       env_vars = {
         COGNITO_CLIENT_ID    = module.cognito.user_pool_client_id
         COGNITO_USER_POOL_ID = module.cognito.user_pool_id
@@ -43,5 +44,6 @@ module "lambda" {
   role_arn      = module.iam.lambda_role_arn
   zip_path      = each.value.zip_path
 
+  public   = each.value.public
   env_vars = lookup(each.value, "env_vars", {})
 }

@@ -1,44 +1,36 @@
 package auth
+
 import (
 	"context"
 	provider "money-manager/internal/provider"
 )
- 
-type SignInUseCase struct {
+
+type RefreshUseCase struct {
 	authProvider provider.AuthProvider
 }
 
-func NewSignInUseCase(
-	authProvider provider.AuthProvider,
-) *SignInUseCase {
-
-	return &SignInUseCase{
+func NewRefreshUseCase(authProvider provider.AuthProvider) *RefreshUseCase {
+	return &RefreshUseCase{
 		authProvider: authProvider,
 	}
 }
 
-func (uc *SignInUseCase) Execute(
+func (uc *RefreshUseCase) Execute(
 	ctx context.Context,
-	email string,
-	password string,
+	refreshToken string,
 ) (AuthResult, error) {
-
-
-	auth, err := uc.authProvider.SignIn(
+	auth, err := uc.authProvider.Refresh(
 		ctx,
-		email,
-		password,
+		refreshToken,
 	)
-
 
 	if err != nil {
 		return AuthResult{}, err
 	}
 
-
 	return AuthResult{
-		AccessToken: auth.AccessToken,
-		IdToken: auth.IdToken,
+		AccessToken:  auth.AccessToken,
+		IdToken:      auth.IdToken,
 		RefreshToken: auth.RefreshToken,
 	}, nil
 }

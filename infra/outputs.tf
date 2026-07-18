@@ -13,3 +13,9 @@ output "lambda_function_arns" {
 output "lambda_role_arn" {
   value = module.iam.lambda_role_arn
 }
+output "lambda_urls" {
+  value = {
+    for k, v in module.lambda :
+    k => v.function_url
+  }
+}

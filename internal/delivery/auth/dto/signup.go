@@ -6,6 +6,6 @@ type SignUpRequestDTO struct {
 	Password string `json:"password"`
 }
 
-type SignUpResponseDTO struct {
-	Message string `json:"message"`
-}
+// type SignUpResponseDTO struct {
+// 	Message string `json:"message"`
+// }

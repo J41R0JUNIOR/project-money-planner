@@ -1,6 +1,6 @@
 package auth
 
-type SignInResult struct {
+type AuthResult struct {
 	AccessToken  string
 	IdToken      string
 	RefreshToken string

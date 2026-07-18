@@ -73,3 +73,24 @@ func (actor CognitoActions) SignIn(ctx context.Context, userName string, passwor
 		RefreshToken: *authResult.RefreshToken,
 	}, err
 }
+
+func (actor CognitoActions) Refresh(ctx context.Context, refreshToken string) (domain.Auth, error) {
+	var authResult *types.AuthenticationResultType
+	output, err := actor.CognitoClient.InitiateAuth(ctx, &cognitoidentityprovider.InitiateAuthInput{
+		AuthFlow:       "REFRESH_TOKEN_AUTH",
+		ClientId:       aws.String(actor.clientId),
+		AuthParameters: map[string]string{"REFRESH_TOKEN": refreshToken},
+	})
+
+	if err != nil {
+		log.Printf("Couldn't refresh token. Here's why: %v\n", err)
+	} else {
+		authResult = output.AuthenticationResult
+	}
+
+	return domain.Auth{
+		AccessToken:  *authResult.AccessToken,
+		IdToken:      *authResult.IdToken,
+		RefreshToken: refreshToken,
+	}, err
+}

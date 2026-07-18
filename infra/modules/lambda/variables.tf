@@ -28,3 +28,8 @@ variable "env_vars" {
   description = "Additional environment variables for the Lambda"
   default     = {}
 }
+
+variable "public" {
+  type    = bool
+  default = false
+}
