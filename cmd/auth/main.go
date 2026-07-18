@@ -27,12 +27,17 @@ func main() {
         panic("COGNITO_CLIENT_ID is not set")
     }
 
+	tableName := os.Getenv("DYNAMODB_TABLE_NAME")
+    if tableName == "" {
+        panic("DYNAMODB_TABLE_NAME is not set")
+    }
+
 	cognitoClient := cognitoidentityprovider.NewFromConfig(cfg)
 	dynamoClient := dynamodb.NewFromConfig(cfg)
 
 	authProvider := provider.NewCognitoActions(cognitoClient, clientID)
 
-	userRepository := db.NewUserRepository(dynamoClient)
+	userRepository := db.NewUserRepository(dynamoClient, tableName)
 
 	signUpUseCase := usecase.NewSignUpUseCase(
 		authProvider,

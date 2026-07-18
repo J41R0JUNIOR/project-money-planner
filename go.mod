@@ -11,6 +11,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/credentials v1.19.29 // indirect
 	github.com/aws/aws-sdk-go-v2/feature/ec2/imds v1.18.30 // indirect
 	github.com/aws/aws-sdk-go-v2/internal/v4a v1.4.31 // indirect
+	github.com/aws/aws-sdk-go-v2/service/dynamodbstreams v1.35.1 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.13.30 // indirect
 	github.com/aws/aws-sdk-go-v2/service/signin v1.4.1 // indirect
 	github.com/aws/aws-sdk-go-v2/service/sso v1.32.1 // indirect
@@ -21,6 +22,7 @@ require (
 require (
 	github.com/aws/aws-sdk-go-v2 v1.42.1
 	github.com/aws/aws-sdk-go-v2/config v1.32.30
+	github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue v1.20.52
 	github.com/aws/aws-sdk-go-v2/internal/configsources v1.4.30 // indirect
 	github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.7.30 // indirect
 	github.com/aws/aws-sdk-go-v2/service/cognitoidentityprovider v1.64.1

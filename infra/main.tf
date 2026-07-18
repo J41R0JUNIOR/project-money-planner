@@ -6,8 +6,10 @@ locals {
       function_name = "${local.app_name}-${var.environment}-auth"
       zip_path      = abspath("${path.root}/../dist/auth/function.zip")
       env_vars = {
-        COGNITO_USER_POOL_ID = module.cognito.user_pool_id
         COGNITO_CLIENT_ID    = module.cognito.user_pool_client_id
+        COGNITO_USER_POOL_ID = module.cognito.user_pool_id
+
+        DYNAMODB_TABLE_NAME = module.dynamodb.table_name
       }
     }
   }
@@ -27,6 +29,8 @@ module "iam" {
 
 module "dynamodb" {
   source      = "./modules/dynamodb"
+  app_name    = local.app_name
+  environment = var.environment
 }
 
 module "lambda" {

@@ -47,5 +47,5 @@ func (uc *SignUpUseCase) Execute(
 		Email: email,
 	}
 
-	return uc.userRepository.Save(user)
+	return uc.userRepository.Save(user, ctx)
 }
