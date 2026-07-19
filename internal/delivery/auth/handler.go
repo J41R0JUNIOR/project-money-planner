@@ -13,12 +13,14 @@ type Handler struct {
 
 	signUpUseCase *usecase.SignUpUseCase
 	signInUseCase *usecase.SignInUseCase
+	confirmCodeUseCase *usecase.ConfirmCodeUseCase
 	refreshUseCase *usecase.RefreshUseCase
 
 }
 
 func NewHandler(
 	signUp *usecase.SignUpUseCase,
+	confirmCode *usecase.ConfirmCodeUseCase,
 	signIn *usecase.SignInUseCase,
 	refresh *usecase.RefreshUseCase,
 
@@ -27,6 +29,7 @@ func NewHandler(
 	return &Handler{
 		signUpUseCase: signUp,
 		signInUseCase: signIn,
+		confirmCodeUseCase: confirmCode,
 		refreshUseCase: refresh,
 	}
 }
@@ -83,6 +86,35 @@ func (h *Handler) SignIn(
 		}, nil
 	}
 		
+	responseBody, _ := json.Marshal(response)
+
+	return events.APIGatewayV2HTTPResponse{
+		StatusCode: 200,
+		Body: string(responseBody),
+	}, nil
+}
+
+func (h *Handler) ConfirmCode(
+	ctx context.Context,
+	event events.APIGatewayV2HTTPRequest,
+) (events.APIGatewayV2HTTPResponse, error) {
+	var requestDTO dto.ConfirmCodeRequestDTO
+	if err := json.Unmarshal([]byte(event.Body), &requestDTO); err != nil {
+		return events.APIGatewayV2HTTPResponse{
+			StatusCode: 400,
+			Body:       `{"message":"Invalid request body"}`,
+		}, err
+	}
+
+	response, err := h.confirmCodeUseCase.Execute(ctx, requestDTO.Email, requestDTO.Code)
+
+	if err != nil {
+		return events.APIGatewayV2HTTPResponse{
+			StatusCode: 500,
+			Body:       `{"message":"` + err.Error() + `"}`,
+		}, nil
+	}
+
 	responseBody, _ := json.Marshal(response)
 
 	return events.APIGatewayV2HTTPResponse{

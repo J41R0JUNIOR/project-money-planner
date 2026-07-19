@@ -1,9 +1,10 @@
 package auth
+
 import (
 	"context"
 	provider "money-manager/internal/provider"
 )
- 
+
 type SignInUseCase struct {
 	authProvider provider.AuthProvider
 }
@@ -23,22 +24,19 @@ func (uc *SignInUseCase) Execute(
 	password string,
 ) (AuthResult, error) {
 
-
 	auth, err := uc.authProvider.SignIn(
 		ctx,
 		email,
 		password,
 	)
 
-
 	if err != nil {
 		return AuthResult{}, err
 	}
 
-
 	return AuthResult{
-		AccessToken: auth.AccessToken,
-		IdToken: auth.IdToken,
+		AccessToken:  auth.AccessToken,
+		IdToken:      auth.IdToken,
 		RefreshToken: auth.RefreshToken,
 	}, nil
 }

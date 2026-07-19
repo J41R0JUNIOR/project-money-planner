@@ -23,7 +23,6 @@ func NewRouter(
 	}
 }
 
-
 func (r *Router) Handle(
 	ctx context.Context,
 	event events.APIGatewayV2HTTPRequest,
@@ -32,14 +31,23 @@ func (r *Router) Handle(
 	switch {
 
 	case event.RequestContext.HTTP.Method == http.MethodPost &&
-		event.RawPath == "/signup":
+		event.RawPath == "/auth/signup":
 
 		return r.authHandler.SignUp(ctx, event)
 
 	case event.RequestContext.HTTP.Method == http.MethodPost &&
-		event.RawPath == "/signin":
+		event.RawPath == "/auth/signin":
 
 		return r.authHandler.SignIn(ctx, event)
+	
+	case event.RequestContext.HTTP.Method == http.MethodPost &&
+		event.RawPath == "/auth/confirm-code":
+		return r.authHandler.ConfirmCode(ctx, event)
+
+	case event.RequestContext.HTTP.Method == http.MethodPost &&
+		event.RawPath == "/auth/refresh":
+
+		return r.authHandler.RefreshToken(ctx, event)
 
 	default:
 

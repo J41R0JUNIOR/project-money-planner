@@ -52,8 +52,13 @@ func main() {
 		authProvider,
 	)
 
+	confirmCodeUseCase := usecase.NewConfirmCodeUseCase(
+		authProvider,
+	)
+
 	handler := delivery.NewHandler(
 		signUpUseCase,
+		confirmCodeUseCase,
 		signInUseCase,
 		refreshUseCase,
 	)

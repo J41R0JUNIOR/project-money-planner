@@ -32,9 +32,8 @@ func (uc *SignUpUseCase) Execute(
 ) error {
 	userID, err := uc.authProvider.SignUp(
 		ctx,
-		name,
-		password,
 		email,
+		password,
 	)
 
 	if err != nil {
