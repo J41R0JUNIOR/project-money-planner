@@ -4,15 +4,17 @@
 #   output_path = "${path.module}/function.zip"
 # }
 
+
 resource "aws_lambda_function" "this" {
-  # filename         = data.archive_file.this.output_path
   filename         = var.zip_path
   function_name    = var.function_name
   role             = var.role_arn
   handler          = "bootstrap"
-  # source_code_hash = data.archive_file.this.output_base64sha256
-  source_code_hash = filebase64sha256(var.zip_path)
   runtime          = "provided.al2023"
+
+  architectures = ["arm64"]
+
+  source_code_hash = filebase64sha256(var.zip_path)
 
   environment {
     variables = merge(
@@ -23,21 +25,4 @@ resource "aws_lambda_function" "this" {
       var.env_vars
     )
   }
-}
-
-resource "aws_lambda_function_url" "this" {
-  function_name = aws_lambda_function.this.function_name
-
-  authorization_type = var.public ? "NONE" : "AWS_IAM"
-}
-
-resource "aws_lambda_permission" "function_url" {
-  count = var.public ? 1 : 0
-
-  statement_id  = "AllowPublicFunctionUrl"
-  action        = "lambda:InvokeFunctionUrl"
-  function_name = aws_lambda_function.this.function_name
-  principal     = "*"
-
-  function_url_auth_type = "NONE"
 }
