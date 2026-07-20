@@ -67,7 +67,10 @@ module "lambda" {
 
 module "apigateway" {
   source = "./modules/apigateway"
-
+  cors_origins = [
+    "http://localhost:5173",
+    data.terraform_remote_state.frontend.outputs.frontend_url
+  ]
   app_name = local.app_name
 
   cognito_user_pool_id = module.cognito.user_pool_id

@@ -1,18 +1,25 @@
 resource "aws_apigatewayv2_api" "this" {
-
-  name = "${var.app_name}-api"
-
+  name          = "${var.app_name}-api"
   protocol_type = "HTTP"
 
   cors_configuration {
+    allow_origins = var.cors_origins
 
-    allow_origins = [
-      "http://localhost:5173"
+    allow_methods = [
+      "GET",
+      "POST",
+      "PUT",
+      "PATCH",
+      "DELETE",
+      "OPTIONS"
     ]
 
-    allow_methods = ["*"]
+    allow_headers = [
+      "Authorization",
+      "Content-Type"
+    ]
 
-    allow_headers = ["*"]
+    allow_credentials = true
   }
 }
 
