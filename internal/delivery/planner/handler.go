@@ -43,7 +43,16 @@ func (h *PlannerHandler) CreateEvent(
 		}, err
 	}
 
-	error := h.createEventUseCase.Execute(ctx, requestDTO.UserId, requestDTO.AccountId, requestDTO.CategoryId, requestDTO.Name, requestDTO.Description, requestDTO.PlannedEventStatus, requestDTO.Amount)
+	userId := event.RequestContext.Authorizer.JWT.Claims["sub"]
+
+	if userId == "" {
+		return events.APIGatewayV2HTTPResponse{
+			StatusCode: 401,
+			Body:       `{"message":"Unauthorized"}`,
+		}, nil
+	}
+
+	error := h.createEventUseCase.Execute(ctx, userId, requestDTO.AccountId, requestDTO.CategoryId, requestDTO.Name, requestDTO.Description, requestDTO.PlannedEventStatus, requestDTO.Amount)
 
 	if error != nil {
 		return events.APIGatewayV2HTTPResponse{

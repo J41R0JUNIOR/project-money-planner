@@ -6,7 +6,6 @@ import (
 )
 
 type CreateEventRequestDTO struct {
-	UserId             string                    `json:"user_id"`
 	AccountId          string                    `json:"account_id"`
 	CategoryId         string                    `json:"category_id"`
 	Name               string                    `json:"name"`
