@@ -10,12 +10,10 @@ import (
 )
 
 type Handler struct {
-
-	signUpUseCase *usecase.SignUpUseCase
-	signInUseCase *usecase.SignInUseCase
+	signUpUseCase      *usecase.SignUpUseCase
+	signInUseCase      *usecase.SignInUseCase
 	confirmCodeUseCase *usecase.ConfirmCodeUseCase
-	refreshUseCase *usecase.RefreshUseCase
-
+	refreshUseCase     *usecase.RefreshUseCase
 }
 
 func NewHandler(
@@ -27,10 +25,10 @@ func NewHandler(
 ) *Handler {
 
 	return &Handler{
-		signUpUseCase: signUp,
-		signInUseCase: signIn,
+		signUpUseCase:      signUp,
+		signInUseCase:      signIn,
 		confirmCodeUseCase: confirmCode,
-		refreshUseCase: refresh,
+		refreshUseCase:     refresh,
 	}
 }
 
@@ -41,7 +39,7 @@ func (h *Handler) SignUp(
 
 	var requestDTO dto.SignUpRequestDTO
 
-	if  err := json.Unmarshal([]byte(event.Body), &requestDTO); err != nil {
+	if err := json.Unmarshal([]byte(event.Body), &requestDTO); err != nil {
 		return events.APIGatewayV2HTTPResponse{
 			StatusCode: 400,
 			Body:       `{"message":"Invalid request body"}`,
@@ -61,7 +59,7 @@ func (h *Handler) SignUp(
 		StatusCode: 200,
 		Body:       "User signed up successfully",
 	}, nil
-	
+
 }
 
 func (h *Handler) SignIn(
@@ -85,12 +83,12 @@ func (h *Handler) SignIn(
 			Body:       `{"message":"` + err.Error() + `"}`,
 		}, nil
 	}
-		
+
 	responseBody, _ := json.Marshal(response)
 
 	return events.APIGatewayV2HTTPResponse{
 		StatusCode: 200,
-		Body: string(responseBody),
+		Body:       string(responseBody),
 	}, nil
 }
 
@@ -119,7 +117,7 @@ func (h *Handler) ConfirmCode(
 
 	return events.APIGatewayV2HTTPResponse{
 		StatusCode: 200,
-		Body: string(responseBody),
+		Body:       string(responseBody),
 	}, nil
 }
 
@@ -148,6 +146,6 @@ func (h *Handler) RefreshToken(
 
 	return events.APIGatewayV2HTTPResponse{
 		StatusCode: 200,
-		Body: string(responseBody),
+		Body:       string(responseBody),
 	}, nil
 }

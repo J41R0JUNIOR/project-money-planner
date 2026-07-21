@@ -3,10 +3,11 @@ package planner
 import (
 	"context"
 
-	domain "money-manager/internal/domain/planner"
 	root "money-manager/internal/domain"
+	domain "money-manager/internal/domain/planner"
 	"money-manager/internal/repository"
 )
+
 type CreateEventUseCase struct {
 	plannerRepository repository.PlannerRepository
 }
@@ -22,25 +23,22 @@ func NewCreateEventUseCase(
 func (uc *CreateEventUseCase) Execute(
 	ctx context.Context,
 	UserId string,
-    AccountId  string,
-    CategoryId string,
-    Name        string,
-    Description string,
-    Status domain.PlannedEventStatus,
-    Amount root.Money,
+	AccountId string,
+	CategoryId string,
+	Name string,
+	Description string,
+	Status domain.PlannedEventStatus,
+	Amount root.Money,
 ) error {
 	var newEvent = domain.PlannedEvent{
-		Id: "",
-		UserId: UserId,
-		AccountId: AccountId,
-		CategoryId: CategoryId,
-		Name: Name,
+		Id:          "",
+		UserId:      UserId,
+		AccountId:   AccountId,
+		CategoryId:  CategoryId,
+		Name:        Name,
 		Description: Description,
-		Status:	Status,
-		Amount: root.Money{
-			Amount: 0,
-			Currency: "BRL",
-		},
+		Status:      Status,
+		Amount: Amount,
 	}
 
 	error := uc.plannerRepository.SaveEvent(newEvent, ctx)

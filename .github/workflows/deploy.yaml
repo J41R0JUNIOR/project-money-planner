@@ -33,7 +33,6 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
-      # Caso utilize Access Key/Secret
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:

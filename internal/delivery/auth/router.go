@@ -8,11 +8,9 @@ import (
 	"github.com/aws/aws-lambda-go/events"
 )
 
-
 type Router struct {
 	authHandler *Handler
 }
-
 
 func NewRouter(
 	authHandler *Handler,
@@ -39,7 +37,7 @@ func (r *Router) Handle(
 		event.RawPath == "/auth/signin":
 
 		return r.authHandler.SignIn(ctx, event)
-	
+
 	case event.RequestContext.HTTP.Method == http.MethodPost &&
 		event.RawPath == "/auth/confirm-code":
 		return r.authHandler.ConfirmCode(ctx, event)
@@ -53,7 +51,7 @@ func (r *Router) Handle(
 
 		return events.APIGatewayV2HTTPResponse{
 			StatusCode: http.StatusNotFound,
-			Body: `{"message":"route not found"}`,
+			Body:       `{"message":"route not found"}`,
 		}, nil
 	}
 }
