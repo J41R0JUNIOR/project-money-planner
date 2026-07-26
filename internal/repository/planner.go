@@ -10,11 +10,8 @@ type PlannerRepository interface {
 	DeleteCategory(categoryID string, ctx context.Context) error
 	
 	SaveEvent(event domain.PlannedEvent, ctx context.Context) error
-	UpdateEvent(event domain.PlannedEvent, ctx context.Context) error
-	DeleteEvent(eventID string, ctx context.Context) error
-	
-	SaveRecurringEvent(event domain.Recurrence, ctx context.Context) error
-	DeleteRecurringEvent(eventID string, ctx context.Context) error
+	DeleteEvent(userId string, eventID string, ctx context.Context) error
+	ReadEvent(userId string, ctx context.Context) ([]domain.PlannedEvent, error)
 	
 	SavePlannedTransfer(transfer domain.PlannedTransfer, ctx context.Context) error
 	DeletePlannedTransfer(transferID string, ctx context.Context) error

@@ -12,20 +12,19 @@ import (
 type PlannerHandler struct {
 	createEventUseCase *usecase.CreateEventUseCase
 	deleteEventUseCase *usecase.DeleteEventUseCase
-	updateEventUseCase *usecase.UpdateEventUseCase
+	readEventUseCase   *usecase.ReadEventUseCase
 }
 
-func (h *PlannerHandler) NewHandler(
+func NewHandler(
 	createEventUseCase *usecase.CreateEventUseCase,
 	deleteEventUseCase *usecase.DeleteEventUseCase,
-	updateEventUseCase *usecase.UpdateEventUseCase,
-
+	readEventUseCase *usecase.ReadEventUseCase,
 ) *PlannerHandler {
 
 	return &PlannerHandler{
 		createEventUseCase: createEventUseCase,
 		deleteEventUseCase: deleteEventUseCase,
-		updateEventUseCase: updateEventUseCase,
+		readEventUseCase:   readEventUseCase,
 	}
 }
 
@@ -79,7 +78,16 @@ func (h *PlannerHandler) DeleteEvent(
 		}, nil
 	}
 
-	error := h.deleteEventUseCase.Execute(ctx, event.PathParameters["event_id"])
+	userId := event.RequestContext.Authorizer.JWT.Claims["sub"]
+
+	if userId == "" {
+		return events.APIGatewayV2HTTPResponse{
+			StatusCode: 401,
+			Body:       `{"message":"Unauthorized"}`,
+		}, nil
+	}
+
+	error := h.deleteEventUseCase.Execute(ctx, userId, event.PathParameters["event_id"])
 
 	if error != nil {
 		return events.APIGatewayV2HTTPResponse{
@@ -94,31 +102,33 @@ func (h *PlannerHandler) DeleteEvent(
 	}, nil
 }
 
-func (h *PlannerHandler) UpdateEvent(
+func (h *PlannerHandler) ReadEvent(
 	ctx context.Context,
 	event events.APIGatewayV2HTTPRequest,
 ) (events.APIGatewayV2HTTPResponse, error) {
 
-	var requestDTO dto.UpdateEventRequestDTO
-	
-	if err := json.Unmarshal([]byte(event.Body), &requestDTO); err != nil {
-		return events.APIGatewayV2HTTPResponse{
-			StatusCode: 400,
-			Body:       `{"message":"Invalid request body"}`,
-		}, err
-	}
+	userId := event.RequestContext.Authorizer.JWT.Claims["sub"]
 
-	error := h.updateEventUseCase.Execute(ctx, requestDTO.ToDomain())
-
-	if error != nil {
+	if userId == "" {
 		return events.APIGatewayV2HTTPResponse{
-			StatusCode: 500,
-			Body:       `{"message":"` + error.Error() + `"}`,
+			StatusCode: 401,
+			Body:       `{"message":"Unauthorized"}`,
 		}, nil
 	}
 
+	response, err := h.readEventUseCase.Execute(ctx, userId)
+
+	if err != nil {
+		return events.APIGatewayV2HTTPResponse{
+			StatusCode: 500,
+			Body:       `{"message":"` + err.Error() + `"}`,
+		}, nil
+	}
+
+	responseBody, _ := json.Marshal(response)
+
 	return events.APIGatewayV2HTTPResponse{
 		StatusCode: 200,
-		Body:       `{"message":"Event updated successfully"}`,
+		Body:       string(responseBody),
 	}, nil
 }

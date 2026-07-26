@@ -7,27 +7,26 @@ import (
 	"money-manager/internal/repository"
 )
 
-type UpdateEventUseCase struct {
+type ReadEventUseCase struct {
 	plannerRepository repository.PlannerRepository
 }
 
-func NewUpdateEventUseCase(
+func NewReadEventUseCase(
 	plannerRepository repository.PlannerRepository,
-) *UpdateEventUseCase {
-	return &UpdateEventUseCase{
+) *ReadEventUseCase {
+	return &ReadEventUseCase{
 		plannerRepository: plannerRepository,
 	}
 }
 
-func (uc *UpdateEventUseCase) Execute(
+func (uc *ReadEventUseCase) Execute(
 	ctx context.Context,
-	event domain.PlannedEvent,
-) error {
-	error := uc.plannerRepository.UpdateEvent(event, ctx)
-
+	UserId string,
+) ([]domain.PlannedEvent, error) {
+	data, error := uc.plannerRepository.ReadEvent(UserId, ctx)
 	if error != nil {
-		return error
+		return nil, error
 	}
 
-	return nil
+	return data, nil
 }

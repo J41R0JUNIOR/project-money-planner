@@ -35,11 +35,11 @@ func (r *Router) Handle(
 		event.RawPath == "/planner/event":
 
 		return r.handler.DeleteEvent(ctx, event)
-
-	case event.RequestContext.HTTP.Method == http.MethodPut &&
+	
+		case event.RequestContext.HTTP.Method == http.MethodGet &&
 		event.RawPath == "/planner/event":
 
-		return r.handler.UpdateEvent(ctx, event)
+		return r.handler.ReadEvent(ctx, event)
 	default:
 
 		return events.APIGatewayV2HTTPResponse{

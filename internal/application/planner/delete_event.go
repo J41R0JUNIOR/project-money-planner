@@ -20,9 +20,10 @@ func NewDeleteEventUseCase(
 
 func (uc *DeleteEventUseCase) Execute(
 	ctx context.Context,
+	userId string,
 	eventId string,
 ) error {
-	error := uc.plannerRepository.DeleteEvent(eventId, ctx)
+	error := uc.plannerRepository.DeleteEvent(userId, eventId, ctx)
 
 	if error != nil {
 		return error

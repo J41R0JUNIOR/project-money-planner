@@ -30,6 +30,31 @@ locals {
 
         DYNAMODB_TABLE_NAME = module.dynamodb.table_name
       }
+    },
+    planner = {
+      function_name = "${local.app_name}-${var.environment}-planner"
+      zip_path      = abspath("${path.root}/../dist/planner/function.zip")
+      public        = true
+      routes = [
+        {
+          method = "POST"
+          path   = "/planner/event"
+        },
+        {
+          method = "DELETE"
+          path   = "/planner/event"
+        },
+        {
+          method = "GET"
+          path   = "/planner/event"
+        },
+      ]
+      env_vars = {
+        COGNITO_CLIENT_ID    = module.cognito.user_pool_client_id
+        COGNITO_USER_POOL_ID = module.cognito.user_pool_id
+
+        DYNAMODB_TABLE_NAME = module.dynamodb.table_name
+      }
     }
   }
 }

@@ -38,7 +38,7 @@ func (uc *CreateEventUseCase) Execute(
 		Name:        Name,
 		Description: Description,
 		Status:      Status,
-		Amount: Amount,
+		Amount:      Amount,
 	}
 
 	error := uc.plannerRepository.SaveEvent(newEvent, ctx)
