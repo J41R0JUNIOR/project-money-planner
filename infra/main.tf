@@ -34,7 +34,7 @@ locals {
     planner = {
       function_name = "${local.app_name}-${var.environment}-planner"
       zip_path      = abspath("${path.root}/../dist/planner/function.zip")
-      public        = true
+      public        = false
       routes = [
         {
           method = "POST"
