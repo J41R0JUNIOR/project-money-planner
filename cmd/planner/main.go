@@ -1,4 +1,4 @@
-package planner
+package main
 
 import (
 	"context"
@@ -41,5 +41,5 @@ func main() {
 
 	router := delivery.NewRouter(handler)
 
-	lambda.Start(router)
+	lambda.Start(router.Handle)
 }
