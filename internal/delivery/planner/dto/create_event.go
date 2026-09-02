@@ -10,6 +10,9 @@ type CreateEventRequestDTO struct {
 	CategoryId         string                    `json:"category_id"`
 	Name               string                    `json:"name"`
 	Description        string                    `json:"description"`
-	PlannedEventStatus domain.PlannedEventStatus `json:"planned_event_status"`
+	Status             domain.PlannedEventStatus `json:"status"`
 	Amount             root.Money                `json:"amount"`
+	StartDate          string                    `json:"start_date"`
+	Recurrence         *domain.Recurrence        `json:"recurrence,omitempty"`
 }
+ 

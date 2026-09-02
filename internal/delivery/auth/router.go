@@ -44,7 +44,6 @@ func (r *Router) Handle(
 
 	case event.RequestContext.HTTP.Method == http.MethodPost &&
 		event.RawPath == "/auth/refresh":
-
 		return r.authHandler.RefreshToken(ctx, event)
 
 	default:

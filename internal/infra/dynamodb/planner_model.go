@@ -8,6 +8,7 @@ type EventItem struct {
 	AccountId          string `dynamodbav:"AccountId"`
 	CategoryId         string `dynamodbav:"CategoryId"`
 	Name               string `dynamodbav:"Name"`
+	StartDate          string `dynamodbav:"StartDate"`
 	Description        string `dynamodbav:"Description"`
 	PlannedEventStatus string `dynamodbav:"PlannedEventStatus"`
 	Amount             MoneyItem  `dynamodbav:"Amount"`

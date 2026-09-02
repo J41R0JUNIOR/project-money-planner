@@ -1,8 +1,10 @@
 package domain
 
+
+// Amount in cents 
 type Money struct {
-	Amount int64  // Amount in cents
-	Currency Currency
+	Amount int64  `json:"amount"`
+	Currency Currency `json:"currency"`
 }
 
 type Currency string

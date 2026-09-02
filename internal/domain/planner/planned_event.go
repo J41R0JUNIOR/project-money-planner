@@ -6,22 +6,16 @@ import (
 )
 
 type PlannedEvent struct {
-	Id     string
-	UserId string
-
-	AccountId  string
-	CategoryId string
-
-	Name        string
-	Description string
-
-	Status PlannedEventStatus
-
-	Amount root.Money
-
-	StartDate time.Time
-
-	Recurrence *Recurrence
+	Id     string `json:"id"`
+	UserId string `json:"userId"`
+	AccountId  string `json:"accountId"`
+	CategoryId string `json:"categoryId"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Status PlannedEventStatus `json:"status"`
+	Amount root.Money `json:"amount"`
+	StartDate time.Time `json:"startDate"`
+	Recurrence *Recurrence `json:"recurrence"`
 }
 
 type PlannedEventStatus string

@@ -3,6 +3,7 @@ package dynamodb
 import (
 	"context"
 	"money-manager/internal/domain/planner"
+	"time"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
@@ -45,12 +46,18 @@ func (p *PlannerRepository) ReadEvent(userId string, ctx context.Context) ([]dom
 			return nil, err
 		}
 
+		startDateParsed, err := time.Parse(time.RFC3339, event.StartDate)
+		if err != nil {
+			return nil, err
+		}
+
 		plannedEvent := domain.PlannedEvent{
 			Id:         event.Id,
 			UserId:     event.UserId,
 			AccountId:  event.AccountId,
 			CategoryId: event.CategoryId,
 			Name:	  event.Name,
+			StartDate:  startDateParsed,
 			Description: event.Description,
 			Status:      domain.PlannedEventStatus(event.PlannedEventStatus),
 		}
@@ -80,6 +87,7 @@ func (p *PlannerRepository) SaveEvent(event domain.PlannedEvent, ctx context.Con
 		AccountId:          event.AccountId,
 		CategoryId:         event.CategoryId,
 		Name:               event.Name,
+		StartDate:          event.StartDate.Format(time.RFC3339),
 		Description:        event.Description,
 		PlannedEventStatus: string(event.Status),
 		Amount: MoneyItem{

@@ -126,10 +126,10 @@ func (h *Handler) RefreshToken(
 	event events.APIGatewayV2HTTPRequest,
 ) (events.APIGatewayV2HTTPResponse, error) {
 	var requestDTO dto.RefreshRequestDTO
-	if err := json.Unmarshal([]byte(event.Body), &requestDTO); err != nil {
+	if err := json.Unmarshal([]byte(event.Headers["Authorization"]), &requestDTO); err != nil {
 		return events.APIGatewayV2HTTPResponse{
-			StatusCode: 400,
-			Body:       `{"message":"Invalid request body"}`,
+			StatusCode: 401,
+			Body:       `{"message":"Invalid header Authorization"}`,
 		}, err
 	}
 

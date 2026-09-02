@@ -51,7 +51,7 @@ func (h *PlannerHandler) CreateEvent(
 		}, nil
 	}
 
-	error := h.createEventUseCase.Execute(ctx, userId, requestDTO.AccountId, requestDTO.CategoryId, requestDTO.Name, requestDTO.Description, requestDTO.PlannedEventStatus, requestDTO.Amount)
+	error := h.createEventUseCase.Execute(ctx, userId, requestDTO.AccountId, requestDTO.CategoryId, requestDTO.Name, requestDTO.Description, requestDTO.Status, requestDTO.Amount, requestDTO.StartDate, requestDTO.Recurrence)
 
 	if error != nil {
 		return events.APIGatewayV2HTTPResponse{

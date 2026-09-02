@@ -29,4 +29,5 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding v1.13.13 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/endpoint-discovery v1.12.7 // indirect
 	github.com/aws/smithy-go v1.27.3 // indirect
+	github.com/google/uuid v1.6.0
 )
