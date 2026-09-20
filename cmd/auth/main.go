@@ -7,7 +7,7 @@ import (
 	usecase "money-manager/internal/application/auth"
 	delivery "money-manager/internal/delivery/auth"
 	provider "money-manager/internal/infra/cognito"
-	db "money-manager/internal/infra/dynamodb"
+	db "money-manager/internal/infra/dynamodb/repository"
 
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/aws/aws-sdk-go-v2/config"

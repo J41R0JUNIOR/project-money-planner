@@ -6,6 +6,7 @@ import (
 )
 
 type PlannerRepository interface {
+	ReadCategories(userId string, ctx context.Context) ([]domain.Category, error)
 	SaveCategory(category domain.Category, ctx context.Context) error
 	DeleteCategory(categoryID string, ctx context.Context) error
 	

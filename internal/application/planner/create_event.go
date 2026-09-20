@@ -13,6 +13,7 @@ import (
 
 type CreateEventUseCase struct {
 	plannerRepository repository.PlannerRepository
+	
 }
 
 func NewCreateEventUseCase(
@@ -35,6 +36,7 @@ func (uc *CreateEventUseCase) Execute(
 	StartDate string,
 	Recurrence *domain.Recurrence,
 ) error {
+
 	startDateParsed, err := time.Parse(time.RFC3339, StartDate)
 	if err != nil {
 		return err
@@ -53,10 +55,10 @@ func (uc *CreateEventUseCase) Execute(
 		Recurrence:  Recurrence,
 	}
 
-	error := uc.plannerRepository.SaveEvent(newEvent, ctx)
+	err = uc.plannerRepository.SaveEvent(newEvent, ctx)
 
-	if error != nil {
-		return error
+	if err != nil {
+		return err
 	}
 
 	return nil

@@ -1,9 +1,10 @@
-package dynamodb
+package repository
 
 import (
 	"context"
 
 	"money-manager/internal/domain/user"
+	"money-manager/internal/infra/dynamodb/model"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
@@ -24,7 +25,7 @@ func NewUserRepository(client *dynamodb.Client, tableName string) *UserRepositor
 }
 
 func (r UserRepository) Save(user domain.User, ctx context.Context) error {
-	item := UserItem{
+	item := dynamodb_model.UserItem{
 		PK: "USER#" + user.Id,
 		SK: "PROFILE",
 

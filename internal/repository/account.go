@@ -8,6 +8,7 @@ import (
 type AccountRepository interface {
 	// GetById(accountID string, ctx context.Context) (domain.Account, error)
 	// Get(ctx context.Context) ([]domain.Account, error)
+	GetAllByUserId(userId string, ctx context.Context) ([]domain.Account, error)
 	Save(account domain.Account, ctx context.Context) error
 	Delete(accountID string, ctx context.Context) error
 }

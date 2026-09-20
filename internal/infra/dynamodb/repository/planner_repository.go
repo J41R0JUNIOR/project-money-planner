@@ -1,8 +1,11 @@
-package dynamodb
+package repository
 
 import (
 	"context"
+	root "money-manager/internal/domain"
 	"money-manager/internal/domain/planner"
+	"money-manager/internal/infra/dynamodb/model"
+
 	"time"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -40,8 +43,9 @@ func (p *PlannerRepository) ReadEvent(userId string, ctx context.Context) ([]dom
 	var plannedEvents []domain.PlannedEvent
 
 	for _, item := range events.Items {
-		var event EventItem
+		var event dynamodb_model.EventItem
 		err = attributevalue.UnmarshalMap(item, &event)
+
 		if err != nil {
 			return nil, err
 		}
@@ -52,15 +56,20 @@ func (p *PlannerRepository) ReadEvent(userId string, ctx context.Context) ([]dom
 		}
 
 		plannedEvent := domain.PlannedEvent{
-			Id:         event.Id,
-			UserId:     event.UserId,
-			AccountId:  event.AccountId,
-			CategoryId: event.CategoryId,
-			Name:	  event.Name,
-			StartDate:  startDateParsed,
+			Id:          event.Id,
+			UserId:      event.UserId,
+			AccountId:   event.AccountId,
+			CategoryId:  event.CategoryId,
+			Name:        event.Name,
+			StartDate:   startDateParsed,
 			Description: event.Description,
 			Status:      domain.PlannedEventStatus(event.PlannedEventStatus),
+			Amount: root.Money{
+				Amount:   event.Amount.Amount,
+				Currency: root.Currency(event.Amount.Currency),
+			},
 		}
+
 		plannedEvents = append(plannedEvents, plannedEvent)
 	}
 
@@ -79,7 +88,7 @@ func (p *PlannerRepository) DeleteEvent(userId string, eventID string, ctx conte
 }
 
 func (p *PlannerRepository) SaveEvent(event domain.PlannedEvent, ctx context.Context) error {
-	newEvent := EventItem{
+	newEvent := dynamodb_model.EventItem{
 		PK:                 "USER#" + event.UserId,
 		SK:                 "EVENT#" + event.Id,
 		Id:                 event.Id,
@@ -90,7 +99,7 @@ func (p *PlannerRepository) SaveEvent(event domain.PlannedEvent, ctx context.Con
 		StartDate:          event.StartDate.Format(time.RFC3339),
 		Description:        event.Description,
 		PlannedEventStatus: string(event.Status),
-		Amount: MoneyItem{
+		Amount: dynamodb_model.MoneyItem{
 			Amount:   event.Amount.Amount,
 			Currency: string(event.Amount.Currency),
 		},
@@ -116,7 +125,9 @@ func (p *PlannerRepository) SaveCategory(category domain.Category, ctx context.C
 	panic("unimplemented")
 }
 
-
+func (p *PlannerRepository) ReadCategories(userId string, ctx context.Context) ([]domain.Category, error) {
+	panic("unimplemented")
+}
 
 // DeleteRecurringEvent implements [repository.PlannerRepository].
 func (p *PlannerRepository) DeleteRecurringEvent(eventID string, ctx context.Context) error {

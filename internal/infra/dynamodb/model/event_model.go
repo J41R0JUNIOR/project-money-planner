@@ -1,4 +1,4 @@
-package dynamodb
+package dynamodb_model
 
 type EventItem struct {
 	PK                 string `dynamodbav:"PK"`

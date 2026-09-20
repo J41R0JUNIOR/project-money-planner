@@ -8,10 +8,10 @@ import (
 )
 
 type Router struct {
-	Handler *Handler
+	Handler *AccountHandler
 }
 
-func NewRouter(handler *Handler) *Router {
+func NewRouter(handler *AccountHandler) *Router {
 	return &Router{
 		Handler: handler,
 	}

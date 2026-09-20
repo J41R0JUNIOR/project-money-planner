@@ -47,7 +47,7 @@ func (h *Handler) SignUp(
 	}
 
 	error := h.signUpUseCase.Execute(ctx, requestDTO.Name, requestDTO.Email, requestDTO.Password)
-
+ 
 	if error != nil {
 		return events.APIGatewayV2HTTPResponse{
 			StatusCode: 500,

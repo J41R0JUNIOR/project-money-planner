@@ -6,7 +6,7 @@ import (
 	"os"
 
 	delivery "money-manager/internal/delivery/planner"
-	db "money-manager/internal/infra/dynamodb"
+	db "money-manager/internal/infra/dynamodb/repository"
 
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/aws/aws-sdk-go-v2/config"
