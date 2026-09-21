@@ -55,6 +55,27 @@ locals {
 
         DYNAMODB_TABLE_NAME = module.dynamodb.table_name
       }
+    },
+    account = {
+      function_name = "${local.app_name}-${var.environment}-account"
+      zip_path      = abspath("${path.root}/../dist/account/function.zip")
+      public        = false
+      routes = [
+        {
+          method = "POST"
+          path   = "/account"
+        },
+        {
+          method = "GET"
+          path   = "/account"
+        },
+      ]
+      env_vars = {
+        COGNITO_CLIENT_ID    = module.cognito.user_pool_client_id
+        COGNITO_USER_POOL_ID = module.cognito.user_pool_id
+
+        DYNAMODB_TABLE_NAME = module.dynamodb.table_name
+      }
     }
   }
 }
